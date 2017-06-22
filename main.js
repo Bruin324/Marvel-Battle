@@ -2,11 +2,14 @@ console.log('Hello World!');
 
 var PUBLIC_KEY = "5e95afa5349a935d4aa5c656081f8e54";
 var PRIV_KEY = "2f92590b5ff1d02a9a0040c19ad10d71a8093c6e";
-var loadedCharacters = [];
 
 var playerCard = document.querySelector('.player1');
 var randomCard = document.querySelector('.cpu')
 var fightButton = document.querySelector('#fight-button');
+var attackDescription = document.querySelector('.attack-description')
+
+var randomCharacter = {};
+var loadedCharacters = [];
 
 
 //Gets data from Marvel API
@@ -37,7 +40,8 @@ function getMarvelResponse() {
 function startBattle (event) {
   // console.log('startBattle', selectedCharacter.healthValue, selectedCharacter.strengthValue);
   var randomCharacter = loadedCharacters[Math.floor(Math.random() * loadedCharacters.length)];
-  // console.log(randomCharacter);
+  attackDescription.innerHTML = '';
+  console.log(randomCharacter);
 
   randomCard.innerHTML = "";
   var randomImg = document.createElement('img')
@@ -65,38 +69,44 @@ function startBattle (event) {
 
   var originalPlayerHealth = selectCharacter.healthValue;
   var originalCPUHealth = randomCharacter.healthValue;
+  console.log('OPlayerHealth: ', originalPlayerHealth);
+  console.log('OCPUHealth: ', originalCPUHealth);
+  console.log('FPlayerHealth: ', selectCharacter.healthValue);
+  console.log('FCPUHealth: ', randomCharacter.healthValue);
 
   fightButton.removeEventListener('click', startBattle);
   fightButton.textContent = "ATTACK";
-  
+
   fightButton.addEventListener('click', attack);
 
   console.log(randomCharacter)
-}
 
-function initiateAttack(){
-
-}
-
-function attack (event) {
-  console.log("attack initiated");
-  console.log("Player Health: ", selectedCharacter.healthValue);
-  console.log("CPU Health: ", randomCharacter.healthValue);
-  if (selectedCharacter.healthValue > 0 && randomCharacter.healthValue > 0) {
-    var playerAttackValue = Math.floor(Math.random()*(selectedCharacter.strengthValue));
-    console.log(playerAttackValue);
-    randomCharacter.healthValue -= playerAttackValue;
-    console.log("CPU Health: ", randomCharacter.healthValue);
-    if (randomCharacter.healthValue <= 0) {
-      console.log("random character dead");
-    } else {
-      var randomAttackValue = Math.floor(Math.random()*(randomCharacter.strengthValue));
-      console.log(randomAttackValue);
-      selectedCharacter.healthValue -= randomAttackValue;
-      console.log("CPU Health: ", selectedCharacter.healthValue);
+  function attack (event) {
+    if (selectedCharacter.healthValue > 0 && randomCharacter.healthValue > 0) {
+      var playerAttackValue = Math.floor(Math.random()*(selectedCharacter.strengthValue));
+      randomCharacter.healthValue -= playerAttackValue;
+      var attackLine = selectedCharacter.name + ' attacks ' + randomCharacter.name + ' for ' + playerAttackValue + '. ' + randomCharacter.name + ' health is now ' + randomCharacter.healthValue + '<br>';
+      attackDescription.innerHTML += attackLine;
+      attackDescription.scrollTop = attackDescription.scrollHeight
+      if (randomCharacter.healthValue <= 0) {
+        attackDescription.innerHTML += '<strong>' + randomCharacter.name + ' is Dead.</strong><br>Select new player to play again.'
+        attackDescription.scrollTop = attackDescription.scrollHeight
+      } else {
+        var randomAttackValue = Math.floor(Math.random()*(randomCharacter.strengthValue));
+        selectedCharacter.healthValue -= randomAttackValue;
+        var attackLine = randomCharacter.name + ' attacks  ' + selectedCharacter.name + ' for ' + randomAttackValue + '. ' + selectedCharacter.name + ' health is now ' + selectedCharacter.healthValue + '<br>';
+        attackDescription.innerHTML += attackLine;
+        attackDescription.scrollTop = attackDescription.scrollHeight
+      }
+      if (selectedCharacter.healthValue <= 0) {
+        attackDescription.innerHTML += '<strong>' + selectedCharacter.name + ' is Dead.</strong><br>Select new player to play again.'
+        attackDescription.scrollTop = attackDescription.scrollHeight
+      }
     }
   }
 }
+
+
 
 //Adds clicked character to Player Battle Window, enables FIGHT button
 function selectCharacter (event){
@@ -129,7 +139,6 @@ function selectCharacter (event){
   $(playerDetail).append(playerStrength);
 
   fightButton.disabled = false;
-
   fightButton.addEventListener('click', startBattle/*(selectedCharacter.healthValue, selectedCharacter.strengthValue)*/);
 }
 
@@ -163,7 +172,7 @@ function buildCharacters(characters) {
 
       var characterName = document.createElement('div');
       characterName.className = "character-text character-name"
-      characterName.innerHTML = loadedCharacters.length + ': <a href="' + characters[i].urls[1].url + '" target = "_blank">' + characters[i].name + '</a>';
+      characterName.innerHTML = '<a href="' + characters[i].urls[1].url + '" target = "_blank">' + characters[i].name + '</a>';
       $(characterDetail).append(characterName);
 
       characters[i].healthValue = Math.floor(Math.random()*(100 - 10 + 1)) + 10;

@@ -30,6 +30,12 @@ body {
 
 .attack-animation, .attack-description {
   width: 100%;
+  height: 75px;
+}
+
+.attack-description {
+  text-align: center;
+  overflow: scroll;
 }
 
 #fight-button {

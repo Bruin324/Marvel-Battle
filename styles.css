@@ -1,0 +1,60 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+
+}
+
+.players {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 50px 20px;
+}
+
+.player1, .cpu {
+  flex: 1;
+  border: 1px solid black;
+  width: 200px;
+  /*height: 200px;*/
+  text-align: center;
+}
+
+.fight {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.attack-animation, .attack-description {
+  width: 100%;
+}
+
+#fight-button {
+  padding: 20px;
+  font-size: 20px;
+}
+
+
+.characters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.character-card {
+  width: calc(20% - 10px);
+}
+
+.character-button {
+  border: 0;
+padding: 0;
+background-color: transparent;
+}
+
+.character-pic img, .player1 img, .cpu img{
+  width: 100%;
+  cursor: pointer;
+}

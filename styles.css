@@ -6,6 +6,44 @@ body {
 
 }
 
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 1%;
+    top: 176px;
+    width: 97%;
+    height: 60%;
+    overflow: auto; /* Enable scroll if needed */
+    background-image: url(./images/battleground.jpg);
+    background-size: cover;
+    background-position-y: center;
+    border: 10px solid white;
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    padding: 0 5px;
+    background-color: black;
+}
+
+.close:hover,
+.close:focus {
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.battleground-header {
+  font-size: 30px;
+  text-align: center;
+}
+
 .players {
   display: flex;
   justify-content: space-around;
@@ -19,6 +57,7 @@ body {
   width: 200px;
   /*height: 200px;*/
   text-align: center;
+  background-color: white;
 }
 
 .fight {
@@ -36,6 +75,7 @@ body {
 .attack-description {
   text-align: center;
   overflow: scroll;
+  background-color: white;
 }
 
 #fight-button {

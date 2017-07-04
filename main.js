@@ -7,7 +7,13 @@ var playerCard = document.querySelector('.player1');
 var randomCard = document.querySelector('.cpu')
 var fightButton = document.querySelector('#fight-button');
 var attackDescription = document.querySelector('.attack-description')
+var modal = document.getElementsByClassName('battleground')[0];
+var span = document.getElementsByClassName("close")[0];
+span.onclick = function() {
+    modal.style.display = "none";
+}
 
+// var selectCharacter = {};
 var randomCharacter = {};
 var loadedCharacters = [];
 
@@ -29,7 +35,6 @@ function getMarvelResponse() {
     // name: "Spider-Man"
   }).done(function(data) {
     var characters = data.data.results
-    console.log(characters[3])
     buildCharacters(characters);
 
   }).fail(function(err) {
@@ -38,10 +43,7 @@ function getMarvelResponse() {
 };
 
 function startBattle (event) {
-  // console.log('startBattle', selectedCharacter.healthValue, selectedCharacter.strengthValue);
   var randomCharacter = loadedCharacters[Math.floor(Math.random() * loadedCharacters.length)];
-  attackDescription.innerHTML = '';
-  console.log(randomCharacter);
 
   randomCard.innerHTML = "";
   var randomImg = document.createElement('img')
@@ -67,19 +69,13 @@ function startBattle (event) {
   randomStrength.textContent = "Strength: " + randomCharacter.strengthValue
   $(randomDetail).append(randomStrength);
 
-  var originalPlayerHealth = selectCharacter.healthValue;
+  var originalPlayerHealth = selectedCharacter.healthValue;
   var originalCPUHealth = randomCharacter.healthValue;
-  console.log('OPlayerHealth: ', originalPlayerHealth);
-  console.log('OCPUHealth: ', originalCPUHealth);
-  console.log('FPlayerHealth: ', selectCharacter.healthValue);
-  console.log('FCPUHealth: ', randomCharacter.healthValue);
 
   fightButton.removeEventListener('click', startBattle);
   fightButton.textContent = "ATTACK";
 
   fightButton.addEventListener('click', attack);
-
-  console.log(randomCharacter)
 
   function attack (event) {
     if (selectedCharacter.healthValue > 0 && randomCharacter.healthValue > 0) {
@@ -90,7 +86,11 @@ function startBattle (event) {
       attackDescription.scrollTop = attackDescription.scrollHeight
       if (randomCharacter.healthValue <= 0) {
         attackDescription.innerHTML += '<strong>' + randomCharacter.name + ' is Dead.</strong><br>Select new player to play again.'
-        attackDescription.scrollTop = attackDescription.scrollHeight
+        attackDescription.scrollTop = attackDescription.scrollHeight;
+        fightButton.disabled = true;
+        randomCharacter.healthValue = originalCPUHealth;
+        selectedCharacter.healthValue = originalPlayerHealth;
+        fightButton.removeEventListener('click', attack);
       } else {
         var randomAttackValue = Math.floor(Math.random()*(randomCharacter.strengthValue));
         selectedCharacter.healthValue -= randomAttackValue;
@@ -101,6 +101,12 @@ function startBattle (event) {
       if (selectedCharacter.healthValue <= 0) {
         attackDescription.innerHTML += '<strong>' + selectedCharacter.name + ' is Dead.</strong><br>Select new player to play again.'
         attackDescription.scrollTop = attackDescription.scrollHeight
+        fightButton.disabled = true;
+        randomCharacter.healthValue = originalCPUHealth;
+        selectedCharacter.healthValue = originalPlayerHealth;
+
+        fightButton.removeEventListener('click', attack);
+        fightButton.addEventListener('click', startBattle);
       }
     }
   }
@@ -110,11 +116,9 @@ function startBattle (event) {
 
 //Adds clicked character to Player Battle Window, enables FIGHT button
 function selectCharacter (event){
-  document.querySelector('h1').scrollIntoView();
+  modal.style.display = "block";
   playerCard.innerHTML = "";
-  // console.log(event);
   selectedCharacter = loadedCharacters[event.target.parentNode.value - 1];
-  // console.log(selectedCharacter);
   var playerImg = document.createElement('img')
   playerImg.src = selectedCharacter.thumbnail.path + "/landscape_xlarge." + selectedCharacter.thumbnail.extension;
   $(playerCard).append(playerImg)
@@ -138,7 +142,11 @@ function selectCharacter (event){
   playerStrength.textContent = "Strength: " + selectedCharacter.strengthValue
   $(playerDetail).append(playerStrength);
 
+  randomCard.innerHTML = '<img class="battleCPUPic" src="./images/question-marks.jpg" alt="The Computer will pick a Random Character for you to fight.">'
+
   fightButton.disabled = false;
+  fightButton.textContent = "Generate Opponent"
+  attackDescription.innerHTML = '';
   fightButton.addEventListener('click', startBattle/*(selectedCharacter.healthValue, selectedCharacter.strengthValue)*/);
 }
 
@@ -190,10 +198,7 @@ function buildCharacters(characters) {
     }
   }
 
-  // console.log(loadedCharacters);
-
   var allImages = document.querySelectorAll('.character-button')
-  // console.log(allImages);
   for (j = 0; j < allImages.length; j++) {
     allImages[j].addEventListener('click', selectCharacter)
   }

@@ -8,8 +8,8 @@ var randomCard = document.querySelector('.cpu')
 var fightButton = document.querySelector('#fight-button');
 var attackDescription = document.querySelector('.attack-description')
 var modal = document.getElementsByClassName('battleground')[0];
-var span = document.getElementsByClassName("close")[0];
-span.onclick = function() {
+var modalClose = document.getElementsByClassName("close")[0];
+modalClose.onclick = function() {
     modal.style.display = "none";
 }
 
@@ -23,7 +23,7 @@ function getMarvelResponse() {
 
   var ts = new Date().getTime();
   var hash = md5(ts + PRIV_KEY + PUBLIC_KEY).toString();
-  var url = 'http://gateway.marvel.com:80/v1/public/characters';
+  var url = 'https://gateway.marvel.com/v1/public/characters';
 
   $.getJSON(url, {
     ts: ts,

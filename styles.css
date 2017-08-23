@@ -29,17 +29,13 @@ h1, h2 {
 
 .modal {
   display: none;
-  /* Hidden by default */
   position: fixed;
-  /* Stay in place */
   z-index: 1;
-  /* Sit on top */
   left: 1%;
   top: 176px;
   width: 97%;
   height: 60%;
   overflow: auto;
-  /* Enable scroll if needed */
   background-image: url(./images/battleground.jpg);
   background-size: cover;
   background-position-y: center;
